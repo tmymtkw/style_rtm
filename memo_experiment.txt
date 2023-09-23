@@ -244,7 +244,11 @@ model: ViTPose
 
         ------------------------------------------------------------------------------------
         train -> coco(quantize & line)
-        tmux dl12 train
+        tmux dl12 train **size: S
+
+        ------------------------------------------------------------------------------------
+        train -> coco(quantize & line)
+        tmux dl12 train **size: S
 
 
     <w/o pretrain>

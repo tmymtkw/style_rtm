@@ -40,7 +40,7 @@ param_scheduler = [
 ]
 
 # automatically scaling LR based on the actual training batch size
-auto_scale_lr = dict(base_batch_size=512)
+auto_scale_lr = dict(base_batch_size=256)
 
 # hooks
 default_hooks = dict(
@@ -75,8 +75,8 @@ model = dict(
         patch_cfg=dict(padding=2),
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='https://download.openmmlab.com/mmpose/'
-            'v1/pretrained_models/mae_pretrain_vit_small.pth'),
+            checkpoint='/home/matsukawa/.cache/torch/hub/'
+                'checkpoints/mae_pretrain_vit_small.pth'),
     ),
     head=dict(
         type='HeatmapHead',
