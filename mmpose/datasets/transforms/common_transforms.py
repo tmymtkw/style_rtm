@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Sequence, Tuple, Union
 import mmcv
 import mmengine
 import numpy as np
+import cv2
 from mmcv.image import imflip
 from mmcv.transforms import BaseTransform
 from mmcv.transforms.utils import avoid_cache_randomness, cache_randomness
@@ -520,7 +521,7 @@ class RandomBBoxTransform(BaseTransform):
 
         return offset, scale, rotate
 
-    def transform(self, results: Dict) -> Optional[dict]:
+    def transform(self, results: dict) -> Optional[dict]:
         """The transform function of :class:`RandomBboxTransform`.
 
         See ``transform()`` method of :class:`BaseTransform` for details.
@@ -1054,3 +1055,60 @@ class GenerateTarget(BaseTransform):
         repr_str += ('use_dataset_keypoint_weights='
                      f'{self.use_dataset_keypoint_weights})')
         return repr_str
+
+@TRANSFORMS.register_module()
+class DecreaseColor(BaseTransform):
+    def __init__(self, k: int = 4*5):
+        super().__init__()
+        self.k = k
+        self.criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+        # print('Color Decreasing')
+    
+    def _decreaseColor(self, img):
+        ### quantize
+        ### quantize
+        dst = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+        h, s, v = cv2.split(dst)
+        # breakpoint()
+        # print(v.shape)
+        level = 8
+        num = 256/level
+
+        for i in range(level):
+            idx_s = np.where((num*i<=s) & (num*(i+1)>s))
+            idx_v = np.where((num*i<=v) & (num*(i+1)>v))
+            # print(idx)
+            s[idx_s] = num*(i*2+1)/2
+            v[idx_v] = num*(i*2+1)/2
+
+        dst = cv2.merge([h,s,v])
+        dst = cv2.cvtColor(dst, cv2.COLOR_HSV2RGB)
+        dst_b = cv2.blur(dst, (2,2))
+
+        ### kmeans
+        # dst = img.reshape(-1, 3).astype(np.float32)
+        # # assert isinstance(dst, np.ndarray), f'{type(dst)}'
+
+        # # K-Meansクラスタリングの実施
+        # ret,label,center=cv2.kmeans(dst,self.k,None,self.criteria,10,cv2.KMEANS_RANDOM_CENTERS)
+
+        # # 各クラスタの中心色リストcenterをunit8に型変換
+        # center = np.uint8(center)
+        # # 中心色リストcenterから分類結果labelの要素を取り出す
+        # res = center[label.flatten()]
+        # # 元画像の形状に変形
+        # dst_b = res.reshape((img.shape))
+
+        return dst_b
+
+    def transform(self, results: dict) -> dict:
+        # print(type(results['img']), len(results['img']), results['img'].shape)
+        # assert 'img' in results, ('no image exists in results')
+        if isinstance(results['img'], list):
+            results['img'] = [
+                self._decreaseColor(img) for img in results['img']
+            ]
+        else:
+            results['img'] = self._decreaseColor(results['img'])
+
+        return results

@@ -135,8 +135,13 @@ def merge_args(cfg, args):
 
     return cfg
 
+def device_check():
+    import torch
+    assert torch.cuda.is_available()
 
 def main():
+    # device_check()
+
     args = parse_args()
 
     # load config

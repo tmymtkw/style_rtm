@@ -1,0 +1,57 @@
+python demo/image_demo.py \
+    tests/data/coco/000000000785.jpg \
+    td-hm_hrnet-w48_8xb32-210e_coco-256x192.py \
+    td-hm_hrnet-w48_8xb32-210e_coco-256x192-0e67c616_20220913.pth \
+    --out-file vis_results.jpg \
+    --draw-heatmap
+
+python tools/train.py   python tools/test.py
+CONFIG_FILE
+--work-dir work_dirs/
+--show-dir outputs/
+--show
+--interval 500
+
+モデル構造を書いたファイル .py -> /config/body_2d_keypoint とかにある
+チェックポイントのファイル .pth -> ディレクトリにはない、ダウンロード
+
+・モジュールとして使う場合
+
+### 推論時 ###
+
+from mmpose.apis import MMPoseInferencer -> 後がどの方式でも共通
+
+# build the inferencer with model alias
+inferencer = MMPoseInferencer('human')
+
+# build the inferencer with model config name
+inferencer = MMPoseInferencer('td-hm_hrnet-w32_8xb64-210e_coco-256x192')
+
+# build the inferencer with model config path and checkpoint path/URL
+inferencer = MMPoseInferencer(
+    pose2d='configs/body_2d_keypoint/topdown_heatmap/coco/' \               ->pose2d: 構成ファイル名（カレントディレクトリにある時？） or パス
+           'td-hm_hrnet-w32_8xb64-210e_coco-256x192.py',
+    pose2d_weights='https://download.openmmlab.com/mmpose/top_down/' \      ->pose2d_weights: チェックポイントのパス
+                   'hrnet/hrnet_w32_coco_256x192-c78dce93_20200708.pth'
+    det_model=('human')                                                     ->det_model: エイリアス（'human', 'hand', 'face', 'animal'から1つ選ぶ）
+)
+-> カスタムで使うなら多分これ、引数に入れるパスを
+    pose2d='custom_human_pose_estimator.py',
+    pose2d_weights='custom_human_pose_estimator.pth',
+
+result_generator = inferencer(img_path, vis_out_dir=<path to output directory>, radius=4, thickness=2)
+result = next(result_generator)
+
+### ViTPose-B ###
+    Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.754
+    Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.905
+    Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.827
+    Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.718
+    Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.823
+    Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.805
+    Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.943
+    Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.870
+    Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.764
+    Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.866
+
+CUDA_DEVICE_ORDER="PCI_BUS_ID" CUDA_VISIBLE_DEVICES="0" python train.py
