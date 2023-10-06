@@ -192,6 +192,28 @@ model: ViTPose
         train -> coco+humanart (kmeans)
         val   -> humanart
         dl11 gpu2 **size:S
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.739
+        Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.905
+        Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.801
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.543
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.761
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.770
+        Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.913
+        Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.825
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.620
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.791
+
+        cartoon
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.622
+        Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.859
+        Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.662
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.475
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.657
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.660
+        Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.875
+        Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.698
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.539
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.687
 
         ------------------------------------------------------------------------------------
         train -> coco+humanart (quantize)
@@ -247,7 +269,7 @@ model: ViTPose
         tmux dl12 train **size: S
 
         ------------------------------------------------------------------------------------
-        train -> coco(quantize & line)
+        train -> coco+humanart(quantize & line)
         tmux dl13 train2 **size: S
 
 
