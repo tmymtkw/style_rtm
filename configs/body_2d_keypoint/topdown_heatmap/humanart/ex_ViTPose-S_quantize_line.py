@@ -40,7 +40,7 @@ param_scheduler = [
 ]
 
 # automatically scaling LR based on the actual training batch size
-auto_scale_lr = dict(base_batch_size=512)
+auto_scale_lr = dict(base_batch_size=256)
 
 # hooks
 default_hooks = dict(
@@ -117,7 +117,7 @@ val_pipeline = [
 
 # data loaders
 train_dataloader = dict(
-    batch_size=512,
+    batch_size=256,
     num_workers=4,
     persistent_workers=True,
     pin_memory = True,
@@ -131,7 +131,7 @@ train_dataloader = dict(
         pipeline=train_pipeline,
     ))
 val_dataloader = dict(
-    batch_size=64,
+    batch_size=32,
     num_workers=4,
     persistent_workers=True,
     pin_memory = True,

@@ -71,8 +71,7 @@ model = dict(
                 num_channels=(48, 96, 192, 384))),
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='https://download.openmmlab.com/mmpose/'
-            'pretrain_models/hrnet_w48-8ef0771d.pth'),
+            checkpoint='/home/matsukawa/.cache/torch/hub/checkpoints/hrnet_w48-8ef0771d.pth'),
     ),
     head=dict(
         type='HeatmapHead',
@@ -112,9 +111,10 @@ val_pipeline = [
 
 # data loaders
 train_dataloader = dict(
-    batch_size=32,
-    num_workers=2,
+    batch_size=512,
+    num_workers=4,
     persistent_workers=True,
+    pin_memory=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
@@ -126,8 +126,9 @@ train_dataloader = dict(
     ))
 val_dataloader = dict(
     batch_size=32,
-    num_workers=2,
+    num_workers=4,
     persistent_workers=True,
+    pin_memory=True,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False, round_up=False),
     dataset=dict(
@@ -167,4 +168,4 @@ val_evaluator = dict(
 # test_evaluator = dict(
 #     type='CocoMetric',
 #     ann_file=data_root + 'datasets/HumanArt/annotations/validation_humanart_cartoon.json')
-test_evaluater = val_evaluator
+test_evaluator = val_evaluator
