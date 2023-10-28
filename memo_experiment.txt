@@ -458,6 +458,29 @@ tmux dl12 train **size: S
 train -> coco+humanart(quantize & line)
 tmux dl13 train2 **size: S
 
+all
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.726
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.895
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.791
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.533
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.751
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.760
+Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.910
+Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.819
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.613
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.780
+
+cartoon
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.599
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.838
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.661
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.488
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.629
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.636
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.858
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.694
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.553
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.658
 
 <w/o pretrain>
 train -> coco (加工なし)
