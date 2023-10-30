@@ -73,10 +73,10 @@ model = dict(
         with_cls_token=False,
         out_type='featmap',
         patch_cfg=dict(padding=2),
-        init_cfg=dict(
-            type='Pretrained',
-            checkpoint='https://download.openmmlab.com/mmpose/'
-            'v1/pretrained_models/mae_pretrain_vit_small.pth'),
+        # init_cfg=dict(
+        #     type='Pretrained',
+        #     checkpoint='/home/matsukawa/mmpose/configs/body_2d_keypoint/topdown_heatmap/'
+        #     + 'humanart/td-hm_ViTPose-small_8xb64-210e_humanart-256x192-5cbe2bfc_20230611.pth'),
     ),
     head=dict(
         type='HeatmapHead',
@@ -93,7 +93,7 @@ model = dict(
     ))
 
 # base dataset settings
-data_root = 'data/'
+data_root = '/home/matsukawa/datasets/'
 dataset_type = 'HumanArtDataset'
 data_mode = 'topdown'
 
@@ -134,14 +134,15 @@ val_dataloader = dict(
     num_workers=4,
     persistent_workers=True,
     drop_last=False,
+    pin_memory=True,
     sampler=dict(type='DefaultSampler', shuffle=False, round_up=False),
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
         data_mode=data_mode,
-        ann_file='HumanArt/annotations/validation_humanart.json',
-        bbox_file=f'{data_root}HumanArt/person_detection_results/'
-        'HumanArt_validation_detections_AP_H_56_person.json',
+        ann_file='HumanArt/annotations/validation_humanart_digital_art.json',
+        # bbox_file=f'{data_root}HumanArt/person_detection_results/'
+        # 'HumanArt_validation_detections_AP_H_56_person.json',
         data_prefix=dict(img=''),
         test_mode=True,
         pipeline=val_pipeline,
@@ -151,5 +152,5 @@ test_dataloader = val_dataloader
 # evaluators
 val_evaluator = dict(
     type='CocoMetric',
-    ann_file=data_root + 'HumanArt/annotations/validation_humanart.json')
+    ann_file=data_root + 'HumanArt/annotations/validation_humanart_digital_art.json')
 test_evaluator = val_evaluator

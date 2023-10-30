@@ -95,6 +95,10 @@ val   -> humanart
 train -> coco+humanart (quantize)
 val   -> humanart
 
+train -> coco+humanart (quantize_line)
+val   -> humanart
+
+
 <w/o pretrain>
 train -> coco (加工なし)
 val   -> humanart
@@ -187,6 +191,18 @@ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.552
 Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.329
 Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.024
 Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.374
+
+------------------------------------------------------------------------------------
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.623
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.857
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.675
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.495
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.655
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.659
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.873
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.706
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.569
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.683
 
 ------------------------------------------------------------------------------------
 train -> coco+humanart
@@ -482,6 +498,41 @@ cartoon
  Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.553
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.658
 
+digital
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.693
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.930
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.789
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.573
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.721
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.745
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.943
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.833
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.721
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.753
+
+oil
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.746
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.926
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.816
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.447
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.775
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.780
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.934
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.843
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.550
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.804
+
+watercolor
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.695
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.887
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.775
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.479
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.716
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.730
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.897
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.803
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.539
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.749
 <w/o pretrain>
 train -> coco (加工なし)
 val   -> humanart
