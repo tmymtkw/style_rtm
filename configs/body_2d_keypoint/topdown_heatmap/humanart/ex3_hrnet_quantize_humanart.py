@@ -24,7 +24,7 @@ param_scheduler = [
 ]
 
 # automatically scaling LR based on the actual training batch size
-auto_scale_lr = dict(base_batch_size=512)
+auto_scale_lr = dict(base_batch_size=32)
 
 # hooks
 default_hooks = dict(checkpoint=dict(save_best='coco/AP', rule='greater'))
@@ -71,8 +71,7 @@ model = dict(
                 num_channels=(48, 96, 192, 384))),
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='https://download.openmmlab.com/mmpose/'
-            'pretrain_models/hrnet_w48-8ef0771d.pth'),
+            checkpoint='/home/matsukawa/.cache/torch/hub/checkpoints/hrnet_w48-8ef0771d.pth'),
     ),
     head=dict(
         type='HeatmapHead',
@@ -85,7 +84,8 @@ model = dict(
         flip_test=True,
         flip_mode='heatmap',
         shift_heatmap=True,
-    ))
+    )
+    )
 
 # base dataset settings
 dataset_type = 'HumanArtDataset'
@@ -98,7 +98,7 @@ train_pipeline = [
     dict(type='GetBBoxCenterScale'),
     dict(type='RandomFlip', direction='horizontal'),
     dict(type='RandomHalfBody'),
-    dict(type='RandomBBoxTransform'),
+    # dict(type='RandomBBoxTransform'),
     dict(type='TopdownAffine', input_size=codec['input_size']),
     dict(type='GenerateTarget', encoder=codec),
     dict(type='PackPoseInputs')
@@ -115,16 +115,35 @@ train_dataloader = dict(
     batch_size=32,
     num_workers=2,
     persistent_workers=True,
+    pin_memory=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
         data_mode=data_mode,
-        ann_file='datasets/HumanArt/annotations/training_coco.json',
-        data_prefix=dict(img='datasets/'),
+        ann_file='datasets/HumanArt/annotations/training_humanart_coco.json',
+        data_prefix=dict(img='datasets/quantize/'),
         pipeline=train_pipeline,
     ))
 val_dataloader = dict(
+    batch_size=8,
+    num_workers=2,
+    persistent_workers=True,
+    drop_last=False,
+    pin_memory=True,
+    sampler=dict(type='DefaultSampler', shuffle=False, round_up=False),
+    dataset=dict(
+        type=dataset_type,
+        data_root=data_root,
+        data_mode=data_mode,
+        ann_file='datasets/HumanArt/annotations/validation_humanart.json',
+        # bbox_file=f'{data_root}datasets/HumanArt/person_detection_results/'
+        # 'HumanArt_validation_detections_AP_H_56_person.json',
+        data_prefix=dict(img='datasets/quantize/'),
+        test_mode=True,
+        pipeline=val_pipeline,
+    ))
+test_dataloader = dict(
     batch_size=32,
     num_workers=2,
     persistent_workers=True,
@@ -134,37 +153,18 @@ val_dataloader = dict(
         type=dataset_type,
         data_root=data_root,
         data_mode=data_mode,
-        ann_file='datasets/HumanArt/annotations/validation_humanart.json',
+        ann_file='datasets/HumanArt/annotations/validation_humanart_cartoon.json',
         bbox_file=f'{data_root}datasets/HumanArt/person_detection_results/'
-        'HumanArt_validation_detections_AP_H_56_person.json',
+        'HumanArt_cartoon_validation_detections_AP_H_56_person.json',
         data_prefix=dict(img='datasets'),
         test_mode=True,
         pipeline=val_pipeline,
     ))
-# test_dataloader = dict(
-#     batch_size=32,
-#     num_workers=2,
-#     persistent_workers=True,
-#     drop_last=False,
-#     sampler=dict(type='DefaultSampler', shuffle=False, round_up=False),
-#     dataset=dict(
-#         type=dataset_type,
-#         data_root=data_root,
-#         data_mode=data_mode,
-#         ann_file='datasets/HumanArt/annotations/validation_humanart_cartoon.json',
-#         bbox_file=f'{data_root}datasets/HumanArt/person_detection_results/'
-#         'HumanArt_cartoon_validation_detections_AP_H_56_person.json',
-#         data_prefix=dict(img='datasets'),
-#         test_mode=True,
-#         pipeline=val_pipeline,
-#     ))
-test_dataloader = None
 
 # evaluators
 val_evaluator = dict(
     type='CocoMetric',
     ann_file=data_root + 'datasets/HumanArt/annotations/validation_humanart.json')
-# test_evaluator = dict(
-#     type='CocoMetric',
-#     ann_file=data_root + 'datasets/HumanArt/annotations/validation_humanart_cartoon.json')
-test_evaluator = None
+test_evaluator = dict(
+    type='CocoMetric',
+    ann_file=data_root + 'datasets/HumanArt/annotations/validation_humanart_cartoon.json')

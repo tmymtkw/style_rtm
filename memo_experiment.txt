@@ -193,6 +193,9 @@ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.024
 Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.374
 
 ------------------------------------------------------------------------------------
+62.3, 72.5, 71.2, 75.7
+
+cartoon
  Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.623
  Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.857
  Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.675
@@ -203,7 +206,39 @@ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.374
  Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.706
  Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.569
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.683
-
+digital
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.725
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.944
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.813
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.606
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.753
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.772
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.958
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.850
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.750
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.779
+ink
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.712
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.899
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.798
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.575
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.785
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.738
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.904
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.812
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.615
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.808
+oil
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.757
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.927
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.828
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.470
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.786
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] =  0.788
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] =  0.935
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] =  0.850
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] =  0.562
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] =  0.812
 ------------------------------------------------------------------------------------
 train -> coco+humanart
 CUDA_DEVICE_ORDER="PCI_BUS_ID" CUDA_VISIBLE_DEVICES="0" python tools/test.py configs/body_2d_keypoint/topdown_heatmap/humanart/ex_ViTPose-S_kmeans.py td-hm_ViTPose-small_8xb64-210e_humanart-256x192-5cbe2bfc_20230611.pth
