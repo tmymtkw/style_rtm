@@ -122,7 +122,7 @@ train_dataloader = dict(
         data_root=data_root,
         data_mode=data_mode,
         ann_file='datasets/HumanArt/annotations/training_humanart_coco.json',
-        data_prefix=dict(img='datasets/quantize/'),
+        data_prefix=dict(img='datasets_augmented/quantize/'),
         pipeline=train_pipeline,
     ))
 val_dataloader = dict(
@@ -139,7 +139,7 @@ val_dataloader = dict(
         ann_file='datasets/HumanArt/annotations/validation_humanart.json',
         # bbox_file=f'{data_root}datasets/HumanArt/person_detection_results/'
         # 'HumanArt_validation_detections_AP_H_56_person.json',
-        data_prefix=dict(img='datasets/quantize/'),
+        data_prefix=dict(img='datasets_augmented/quantize/'),
         test_mode=True,
         pipeline=val_pipeline,
     ))

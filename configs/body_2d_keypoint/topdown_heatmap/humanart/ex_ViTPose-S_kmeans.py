@@ -117,7 +117,7 @@ val_pipeline = [
 
 # data loaders
 train_dataloader = dict(
-    batch_size=256,
+    batch_size=32,
     num_workers=4,
     persistent_workers=True,
     pin_memory = True,
@@ -131,7 +131,7 @@ train_dataloader = dict(
         pipeline=train_pipeline,
     ))
 val_dataloader = dict(
-    batch_size=64,
+    batch_size=32,
     num_workers=4,
     persistent_workers=True,
     pin_memory = True,
@@ -160,9 +160,9 @@ test_dataloader = dict(
         type=dataset_type,
         data_root=data_root,
         data_mode=data_mode,
-        ann_file='HumanArt/annotations/validation_humanart_watercolor.json',
-        # bbox_file=f'{data_root}datasets/HumanArt/person_detection_results/'
-        # 'HumanArt_cartoon_validation_detections_AP_H_56_person.json',
+        ann_file='HumanArt/annotations/validation_humanart.json',
+        bbox_file=f'{data_root}HumanArt/person_detection_results/'
+        'HumanArt_validation_detections_AP_H_56_person.json',
         data_prefix=dict(img=''),
         test_mode=True,
         pipeline=val_pipeline,
@@ -175,4 +175,4 @@ val_evaluator = dict(
 # test_evaluator = val_evaluator
 test_evaluator = dict(
     type='CocoMetric',
-    ann_file=data_root + 'HumanArt/annotations/validation_humanart_watercolor.json')
+    ann_file=data_root + 'HumanArt/annotations/validation_humanart.json')
