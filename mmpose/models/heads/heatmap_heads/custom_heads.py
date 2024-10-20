@@ -431,7 +431,7 @@ class U2NETP(nn.Module):
 
         d0 = self.outconv(torch.cat((d1,d2,d3,d4,d5,d6),1))
 
-        return F.sigmoid(d0), F.sigmoid(d1), F.sigmoid(d2), F.sigmoid(d3), F.sigmoid(d4), F.sigmoid(d5), F.sigmoid(d6)
+        return F.sigmoid(d0)
 
 class EdgeConv(nn.Module):
     def __init__(self):
@@ -473,30 +473,40 @@ class EdgeConv(nn.Module):
         return (edge1, edge2)
 
 class ConvBlock(nn.Module):
-    def __init__(self, channels, groups=17):
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1, groups=1):
         super().__init__()
         self.groups = groups
-        self.channels = channels
-        self.conv = nn.Conv2d(self.channels, self.channels, 3, 1, 1, groups=self.groups)
-        self.norm = nn.BatchNorm2d(num_features=self.groups)
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.kernel_size = kernel_size
+        self.stride = stride
+        self.padding = padding
+        self.conv = nn.Conv2d(self.in_channels, self.out_channels, self.kernel_size, self.stride, self.padding, groups=self.groups)
+        self.norm = nn.BatchNorm2d(num_features=self.out_channels)
         self.relu = nn.ReLU()
 
     def forward(self, x):
+        # print(x.shape)
         x = self.conv(x)
         x = self.norm(x)
         x = self.relu(x)
         return x
 
 class DeconvBlock(nn.Module):
-    def __init__(self, channels, groups=17):
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1, groups=1):
         super().__init__()
         self.groups = groups
-        self.channels = channels
-        self.conv = nn.ConvTranspose2d(self.channels, self.channels, 3, 1, 1, groups=self.groups)
-        self.norm = nn.BatchNorm2d(num_features=self.groups)
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.kernel_size = kernel_size
+        self.stride = stride
+        self.padding = padding
+        self.conv = nn.ConvTranspose2d(self.in_channels, self.out_channels, self.kernel_size, self.stride, self.padding, groups=self.groups)
+        self.norm = nn.BatchNorm2d(num_features=self.out_channels)
         self.relu = nn.ReLU()
 
     def forward(self, x):
+        # print(x.shape)
         x = self.conv(x)
         x = self.norm(x)
         x = self.relu(x)
@@ -507,8 +517,8 @@ class CustomHead(BaseHead):
     def __init__(self,
                  in_channels: Union[int, Sequence[int]],
                  out_channels: int,
-                 deconv_out_channels: OptIntSeq = (256, 256, 256),
-                 deconv_kernel_sizes: OptIntSeq = (4, 4, 4),
+                 deconv_out_channels: OptIntSeq = (256, 256),
+                 deconv_kernel_sizes: OptIntSeq = (4, 4),
                  conv_out_channels: OptIntSeq = None,
                  conv_kernel_sizes: OptIntSeq = None,
                  final_layer: dict = dict(kernel_size=1),
@@ -516,7 +526,7 @@ class CustomHead(BaseHead):
                      type='KeypointMSELoss', use_target_weight=True),
                  decoder: OptConfigType = None,
                  init_cfg: OptConfigType = None,
-                 u2net_weight: str = None,
+                 u2net_weight: str = "/home/matsukawa/U-2-Net/saved_models/u2netp/u2netp.pth",
                  ratio = 0.5):
 
         if init_cfg is None:
@@ -526,6 +536,7 @@ class CustomHead(BaseHead):
 
         self.in_channels = in_channels
         self.out_channels = out_channels
+        self.hidden_channels = deconv_out_channels[-1]
         self.loss_module = MODELS.build(loss)
         if decoder is not None:
             self.decoder = KEYPOINT_CODECS.build(decoder)
@@ -538,16 +549,18 @@ class CustomHead(BaseHead):
         self.layer = self._make_deconv_layers(self.in_channels, deconv_out_channels, deconv_kernel_sizes)
 
         # second layer
-        self.conv1 = ConvBlock(17)
-        self.conv2 = ConvBlock(17)
-        self.conv3 = ConvBlock(17)
-        self.deconv3 = DeconvBlock(17)
-        self.deconv2 = DeconvBlock(17)
-        self.deconv1 = DeconvBlock(17)
+        self.conv1 = ConvBlock(self.hidden_channels,self.hidden_channels,3,2,1)
+        self.conv2 = ConvBlock(self.hidden_channels,self.hidden_channels,3,2,1)
+        self.conv3 = ConvBlock(self.hidden_channels,self.hidden_channels,3,2,1)
+        self.deconv3 = DeconvBlock(self.hidden_channels,self.hidden_channels,2,2,0)
+        self.deconv2 = DeconvBlock(self.hidden_channels,self.hidden_channels,2,2,0)
+        self.deconv1 = DeconvBlock(self.hidden_channels,self.hidden_channels,2,2,0)
 
         # u2net
         self.u2net = U2NETP(3,1)
-        self.u2conv = nn.Sequential(nn.Conv2d(1, 1, 7, 1, 3),
+        self.avgpool = nn.AvgPool2d(kernel_size=2, stride=2)
+        self.maxpool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.u2conv0 = nn.Sequential(nn.Conv2d(2, 1, 3, 1, 1),
                                     nn.Sigmoid())
         if u2net_weight:
             self.u2net.load_state_dict(torch.load(u2net_weight))
@@ -589,16 +602,16 @@ class CustomHead(BaseHead):
         # else:
         #     self.conv_layers = nn.Identity()
 
-        # if final_layer is not None:
-        #     cfg = dict(
-        #         type='Conv2d',
-        #         in_channels=in_channels,
-        #         out_channels=out_channels,
-        #         kernel_size=1)
-        #     cfg.update(final_layer)
-        #     self.final_layer = build_conv_layer(cfg)
-        # else:
-        #     self.final_layer = nn.Identity()
+        if final_layer is not None:
+            cfg = dict(
+                type='Conv2d',
+                in_channels=self.hidden_channels,
+                out_channels=out_channels,
+                kernel_size=1)
+            cfg.update(final_layer)
+            self.final_layer = build_conv_layer(cfg)
+        else:
+            self.final_layer = nn.Identity()
 
         # Register the hook to automatically convert old version state dicts
         self._register_load_state_dict_pre_hook(self._load_state_dict_pre_hook)
@@ -660,6 +673,7 @@ class CustomHead(BaseHead):
             layers.append(nn.BatchNorm2d(num_features=out_channels))
             layers.append(nn.ReLU(inplace=True))
             in_channels = out_channels
+        # layers.append(nn.Conv2d(in_channels, 17, 1))
 
         return nn.Sequential(*layers)
 
@@ -672,7 +686,7 @@ class CustomHead(BaseHead):
         ]
         return init_cfg
 
-    def forward(self, feats: tuple) -> Tuple:
+    def forward(self, feats: tuple) -> Tensor:
         """Forward the network. The input is multi scale feature maps and the
         output is the heatmap.
 
@@ -687,17 +701,27 @@ class CustomHead(BaseHead):
         x = feats[0]
         so = feats[-1]
         so = self.u2net(so)
-        print("x, edge", x.shape, so.shape)
+        so_avg = self.avgpool(so)
+        so_max = self.maxpool(so)
+        so = torch.cat((so_avg, so_max), dim=1)
+        so = self.u2conv0(so)
+        so0 = F.interpolate(so, scale_factor=1/2)
+        so1 = F.interpolate(so, scale_factor=1/4)
+        so2 = F.interpolate(so, scale_factor=1/8)
+        # print(type(x), type(so))
+        # print("x, edge", x.shape, so.shape)
 
         x0 = self.layer(x)
         x1 = self.conv1(x0)
         x2 = self.conv2(x1)
         x3 = self.conv3(x2)
-        x = self.deconv3(x3) + so * x2
-        x = self.deconv2(x) + so * x1 
-        x = self.deconv1(x) + so * x0
+        x = self.deconv3(x3) + so2 * x2
+        x = self.deconv2(x) + so1 * x1 
+        x = self.deconv1(x) + so0 * x0
+
+        x = self.final_layer(x)
             
-        return (x0, x)
+        return x
 
     def predict(self,
                 feats: Features,

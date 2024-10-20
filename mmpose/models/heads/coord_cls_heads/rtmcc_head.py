@@ -145,9 +145,9 @@ class RTMCCHead(BaseHead):
             pred_y (Tensor): 1d representation of y.
         """
         feats = feats[-1]
-
+        # print(feats.shape)
         feats = self.final_layer(feats)  # -> B, K, H, W
-
+        # print(feats.shape)
         # flatten the output heatmap
         feats = torch.flatten(feats, 2)
 
@@ -252,7 +252,6 @@ class RTMCCHead(BaseHead):
         train_cfg: OptConfigType = {},
     ) -> dict:
         """Calculate losses from a batch of inputs and data samples."""
-
         pred_x, pred_y = self.forward(feats)
 
         gt_x = torch.cat([

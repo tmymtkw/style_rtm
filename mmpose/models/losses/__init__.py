@@ -7,11 +7,12 @@ from .loss_wrappers import CombinedLoss, MultipleLossWrapper
 from .regression_loss import (BoneLoss, L1Loss, MPJPELoss, MSELoss, RLELoss,
                               SemiSupervisionLoss, SmoothL1Loss,
                               SoftWeightSmoothL1Loss, SoftWingLoss, WingLoss)
+from .distillation_loss import DistillationLoss
 
 __all__ = [
     'KeypointMSELoss', 'KeypointOHKMMSELoss', 'SmoothL1Loss', 'WingLoss',
     'MPJPELoss', 'MSELoss', 'L1Loss', 'BCELoss', 'BoneLoss',
     'SemiSupervisionLoss', 'SoftWingLoss', 'AdaptiveWingLoss', 'RLELoss',
     'KLDiscretLoss', 'MultipleLossWrapper', 'JSDiscretLoss', 'CombinedLoss',
-    'AssociativeEmbeddingLoss', 'SoftWeightSmoothL1Loss'
+    'AssociativeEmbeddingLoss', 'SoftWeightSmoothL1Loss', 'DistillationLoss'
 ]
